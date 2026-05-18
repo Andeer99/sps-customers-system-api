@@ -27,6 +27,7 @@
     {
       "name": "Local - Consultar clientes",
       "request": {
+        "description": "Valida el caso feliz local antes de desplegar. Debe devolver 200 y un arreglo JSON de clientes.",
         "method": "GET",
         "header": [],
         "url": {
@@ -43,6 +44,7 @@
     {
       "name": "CloudHub - Consultar clientes",
       "request": {
+        "description": "Comprueba que la app desplegada en CloudHub responde antes de aplicar políticas de API Manager.",
         "method": "GET",
         "header": [],
         "url": {
@@ -59,6 +61,7 @@
     {
       "name": "CloudHub - Consultar clientes con Client-ID",
       "request": {
+        "description": "Valida Client-ID Enforcement usando client_id y client_secret de una client application aprobada.",
         "method": "GET",
         "header": [
           {

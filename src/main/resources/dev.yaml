@@ -1,16 +1,21 @@
+# Propiedades para ambiente dev/CloudHub.
+# Se selecciona con mule.env=dev durante el despliegue.
 http:
+  # CloudHub inyecta el puerto real del worker, pero la práctica mantiene 8081 como valor base.
   host: "0.0.0.0"
   port: "8081"
 
 api:
+  # Reemplazar por el API Instance ID generado en API Manager antes de activar Autodiscovery.
   id: "0"
   name: "sps-customers-system-api"
   version: "v1"
 
 db:
+  # Mismo origen de datos que local para validar paridad entre ambientes.
   host: "mudb.learn.mulesoft.com"
   port: "3306"
+  # Valores cifrados para no exponer credenciales en repositorio ni en revisiones técnicas.
   user: "![3k6hxOMIlm0=]"
   password: "![3k6hxOMIlm0=]"
   database: "training"
-

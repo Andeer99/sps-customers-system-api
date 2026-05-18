@@ -12,6 +12,11 @@
     <name>sps-customers-system-api</name>
     <description>System API para exponer clientes SPS desde la base MySQL de entrenamiento de MuleSoft.</description>
 
+    <!--
+        Versiones base del proyecto.
+        Se deja Mule 4.9.0 porque es una versión LTS compatible con Java 17,
+        útil para una entrega evaluable en Anypoint Studio y CloudHub.
+    -->
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -21,6 +26,11 @@
 
     <build>
         <plugins>
+            <!--
+                El Mule Maven Plugin empaqueta la aplicación como artefacto desplegable.
+                MySQL se declara como shared library para que el conector Database lo encuentre
+                también al desplegar en CloudHub, no solo dentro de Anypoint Studio.
+            -->
             <plugin>
                 <groupId>org.mule.tools.maven</groupId>
                 <artifactId>mule-maven-plugin</artifactId>
@@ -40,6 +50,7 @@
     </build>
 
     <repositories>
+        <!-- Repositorios oficiales necesarios para resolver conectores y módulos MuleSoft. -->
         <repository>
             <id>anypoint-exchange-v3</id>
             <name>Anypoint Exchange</name>
@@ -64,30 +75,35 @@
     </pluginRepositories>
 
     <dependencies>
+        <!-- Expone el endpoint HTTP público de la System API. -->
         <dependency>
             <groupId>org.mule.connectors</groupId>
             <artifactId>mule-http-connector</artifactId>
             <version>1.10.3</version>
             <classifier>mule-plugin</classifier>
         </dependency>
+        <!-- APIkit conecta el contrato RAML con los flows de implementación. -->
         <dependency>
             <groupId>org.mule.modules</groupId>
             <artifactId>mule-apikit-module</artifactId>
             <version>1.11.7</version>
             <classifier>mule-plugin</classifier>
         </dependency>
+        <!-- Database connector ejecuta la consulta SELECT * FROM customers. -->
         <dependency>
             <groupId>org.mule.connectors</groupId>
             <artifactId>mule-db-connector</artifactId>
             <version>1.14.13</version>
             <classifier>mule-plugin</classifier>
         </dependency>
+        <!-- Permite leer credenciales cifradas desde local.yaml y dev.yaml. -->
         <dependency>
             <groupId>com.mulesoft.modules</groupId>
             <artifactId>mule-secure-configuration-property-module</artifactId>
             <version>1.2.7</version>
             <classifier>mule-plugin</classifier>
         </dependency>
+        <!-- Driver JDBC explícito para evitar fallas de ClassNotFoundException en CloudHub. -->
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
