@@ -72,6 +72,7 @@ Cliente/Postman
 - Dejar `api.id=0` en desarrollo hasta crear la instancia real en API Manager.
 - Documentar por etapas en ramas y commits; mantener el README como documentación pública del proyecto.
 - Gestionar avance en README/HANDOFF/checklist local, sin Jira ni Confluence.
+- Subir avances en serie: cada archivo generado o bloque coherente debe tener commit pequeño y push inmediato antes de continuar con el siguiente corte.
 
 ## Siguiente paso recomendado
 
