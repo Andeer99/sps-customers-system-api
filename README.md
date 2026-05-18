@@ -274,10 +274,9 @@ Cada paso del flujo está documentado con capturas reproducibles en `docs/screen
 | 03 | Exchange · RAML publicado | [`03-exchange-published.png`](docs/screenshots/03-exchange-published.png) |
 | 04 | CloudHub · endpoint público 200 | [`04-cloudhub-200-publico.png`](docs/screenshots/04-cloudhub-200-publico.png) |
 | 05 | Postman · CloudHub público 200 | [`05-postman-cloudhub-200-publico.png`](docs/screenshots/05-postman-cloudhub-200-publico.png) |
+| 06 | API Manager · Instance 20913965 Active | [`06-api-manager-active.png`](docs/screenshots/06-api-manager-active.png) |
 | 07 | Postman · Client-ID Enforcement 401 | [`07-postman-cloudhub-401.png`](docs/screenshots/07-postman-cloudhub-401.png) |
 | 08 | Postman · Client-ID Enforcement 200 | [`08-postman-cloudhub-200-clientid.png`](docs/screenshots/08-postman-cloudhub-200-clientid.png) |
-
-> Captura `06-api-manager-active` pendiente de incorporar al repositorio.
 
 ## Documentación Complementaria
 
