@@ -1,0 +1,87 @@
+{
+  "info": {
+    "name": "API de Clientes SPS",
+    "_postman_id": "0eb55f05-8fc7-4512-87ed-4d9a96cb5f4d",
+    "description": "Requests para probar la System API de clientes SPS del reto MuleSoft Trainee.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "localBaseUrl",
+      "value": "http://localhost:8081/api/v1/sps"
+    },
+    {
+      "key": "cloudhubBaseUrl",
+      "value": "https://sps-customers-system-api-yourname.cloudhub.io/api/v1/sps"
+    },
+    {
+      "key": "clientId",
+      "value": ""
+    },
+    {
+      "key": "clientSecret",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "Local - Consultar clientes",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{localBaseUrl}}/customers",
+          "host": [
+            "{{localBaseUrl}}"
+          ],
+          "path": [
+            "customers"
+          ]
+        }
+      }
+    },
+    {
+      "name": "CloudHub - Consultar clientes",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{cloudhubBaseUrl}}/customers",
+          "host": [
+            "{{cloudhubBaseUrl}}"
+          ],
+          "path": [
+            "customers"
+          ]
+        }
+      }
+    },
+    {
+      "name": "CloudHub - Consultar clientes con Client-ID",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "client_id",
+            "value": "{{clientId}}",
+            "type": "text"
+          },
+          {
+            "key": "client_secret",
+            "value": "{{clientSecret}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{cloudhubBaseUrl}}/customers",
+          "host": [
+            "{{cloudhubBaseUrl}}"
+          ],
+          "path": [
+            "customers"
+          ]
+        }
+      }
+    }
+  ]
+}

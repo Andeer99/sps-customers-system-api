@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesoft.org/schema/mule/core"
+      xmlns:api-gateway="http://www.mulesoft.org/schema/mule/api-gateway"
+      xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit"
+      xmlns:db="http://www.mulesoft.org/schema/mule/db"
+      xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+      xmlns:http="http://www.mulesoft.org/schema/mule/http"
+      xmlns:secure-properties="http://www.mulesoft.org/schema/mule/secure-properties"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="
+        http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+        http://www.mulesoft.org/schema/mule/api-gateway http://www.mulesoft.org/schema/mule/api-gateway/current/mule-api-gateway.xsd
+        http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd
+        http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+        http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+        http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/schema/mule/secure-properties/current/mule-secure-properties.xsd">
+
+    <!-- Defaults seguros para desarrollo. En runtime se sobreescriben con -M-Dmule.env y -M-Dmule.key. -->
+    <global-property name="mule.env" value="local"/>
+    <global-property name="mule.key" value="change-at-runtime"/>
+
+    <!-- Carga propiedades por ambiente y descifra credenciales sin exponer la llave en el repositorio. -->
+    <secure-properties:config name="Secure_Properties_Config"
+                              doc:name="Configuración de Secure Properties"
+                              file="${mule.env}.yaml"
+                              key="${mule.key}">
+        <secure-properties:encrypt algorithm="Blowfish" mode="CBC"/>
+    </secure-properties:config>
+
+    <!-- Listener compartido por APIkit; el path específico se define en el flow principal. -->
+    <http:listener-config name="HTTP_Listener_config" doc:name="Configuración HTTP Listener">
+        <http:listener-connection host="${secure::http.host}" port="${secure::http.port}"/>
+    </http:listener-config>
+
+    <!-- Conexión a la base MySQL de entrenamiento usando valores cifrados en local/dev yaml. -->
+    <db:config name="Database_Config" doc:name="Base MySQL de entrenamiento">
+        <db:my-sql-connection host="${secure::db.host}"
+                              port="${secure::db.port}"
+                              user="${secure::db.user}"
+                              password="${secure::db.password}"
+                              database="${secure::db.database}"/>
+    </db:config>
+
+    <!-- APIkit lee el RAML y enruta GET /customers hacia el flow generado por convención. -->
+    <apikit:config name="SPS_Customers_API_Config"
+                   api="api/sps-customers-api.raml"
+                   outboundHeadersMapName="outboundHeaders"
+                   httpStatusVarName="httpStatus"/>
+
+    <!-- Se activa realmente cuando api.id contiene el API Instance ID de API Manager. -->
+    <api-gateway:autodiscovery apiId="${secure::api.id}" flowRef="sps-customers-main"/>
+</mule>

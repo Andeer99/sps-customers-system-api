@@ -1,0 +1,16 @@
+http:
+  host: "0.0.0.0"
+  port: "8081"
+
+api:
+  id: "0"
+  name: "sps-customers-system-api"
+  version: "v1"
+
+db:
+  host: "mudb.learn.mulesoft.com"
+  port: "3306"
+  user: "![3k6hxOMIlm0=]"
+  password: "![3k6hxOMIlm0=]"
+  database: "training"
+
