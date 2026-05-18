@@ -47,6 +47,11 @@
                    outboundHeadersMapName="outboundHeaders"
                    httpStatusVarName="httpStatus"/>
 
-    <!-- Se activa realmente cuando api.id contiene el API Instance ID de API Manager. -->
-    <api-gateway:autodiscovery apiId="${secure::api.id}" flowRef="sps-customers-main"/>
+    <!--
+        Autodiscovery se habilita cuando exista el API Instance ID real de API Manager.
+        Se deja comentado para pruebas locales porque api.id=0 hace que Mule Gateway
+        bloquee la API con 503 antes de llegar al flow.
+
+        <api-gateway:autodiscovery apiId="${secure::api.id}" flowRef="sps-customers-main"/>
+    -->
 </mule>
