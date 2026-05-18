@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+    global.xml
+    ============================================================================
+    Define elementos globales reutilizables por todos los flows. Mantenerlos
+    separados de la lógica (implementation.xml) facilita reemplazar conectores,
+    cambiar credenciales o reapuntar a otro ambiente sin tocar los flujos.
+-->
 <mule xmlns="http://www.mulesoft.org/schema/mule/core"
       xmlns:api-gateway="http://www.mulesoft.org/schema/mule/api-gateway"
       xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit"
@@ -15,11 +22,34 @@
         http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
         http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/schema/mule/secure-properties/current/mule-secure-properties.xsd">
 
-    <!-- Defaults seguros para desarrollo. En runtime se sobreescriben con -M-Dmule.env y -M-Dmule.key. -->
+    <!--
+        Defaults de las propiedades de selección de ambiente.
+
+        - `mule.env` decide qué archivo YAML carga `secure-properties:config`.
+          El default "local" permite arrancar el proyecto desde IDE sin pasar
+          argumentos. En CloudHub se sobreescribe con `mule.env=dev`.
+        - `mule.key` es la llave simétrica con la que se descifran las
+          credenciales del YAML. El valor "change-at-runtime" es un placeholder
+          inválido: garantiza que cualquier ejecución productiva falle ruidosa
+          si la llave real no se inyecta, en lugar de arrancar con un valor
+          adivinable y silencioso.
+    -->
     <global-property name="mule.env" value="local"/>
     <global-property name="mule.key" value="change-at-runtime"/>
 
-    <!-- Carga propiedades por ambiente y descifra credenciales sin exponer la llave en el repositorio. -->
+    <!--
+        Secure Properties Module.
+
+        Carga el archivo `${mule.env}.yaml` y descifra los valores marcados con
+        el formato `![...]`. Los valores no cifrados también quedan disponibles
+        pero deben referenciarse con el prefijo `secure::` porque el módulo
+        expone el archivo completo bajo ese namespace.
+
+        Blowfish/CBC se elige porque es el algoritmo aceptado por la
+        Secure Properties Tool oficial de MuleSoft, lo que permite generar y
+        rotar los valores cifrados desde la línea de comandos sin escribir
+        utilidades propias.
+    -->
     <secure-properties:config name="Secure_Properties_Config"
                               doc:name="Configuración de Secure Properties"
                               file="${mule.env}.yaml"
@@ -27,12 +57,28 @@
         <secure-properties:encrypt algorithm="Blowfish" mode="CBC"/>
     </secure-properties:config>
 
-    <!-- Listener compartido por APIkit; el path específico se define en el flow principal. -->
+    <!--
+        Listener HTTP compartido.
+
+        El path concreto (`/api/v1/sps/*`) se declara en el flow principal en
+        `implementation.xml`; aquí sólo se define host y puerto para poder
+        reutilizar la misma configuración si en el futuro se agregan más flows
+        o endpoints administrativos (health checks, métricas, etc.).
+        host "0.0.0.0" permite recibir conexiones tanto en local como en el
+        worker de CloudHub, que enmascara el puerto público sobre el interno.
+    -->
     <http:listener-config name="HTTP_Listener_config" doc:name="Configuración HTTP Listener">
         <http:listener-connection host="${secure::http.host}" port="${secure::http.port}"/>
     </http:listener-config>
 
-    <!-- Conexión a la base MySQL de entrenamiento usando valores cifrados en local/dev yaml. -->
+    <!--
+        Conexión a la base MySQL.
+
+        Las cinco propiedades viajan por secure-properties para que el host,
+        puerto y nombre de base se puedan cambiar entre ambientes sin tocar
+        XML, y para que usuario/contraseña vivan cifrados aunque la base sea
+        de entrenamiento (la misma práctica aplica a credenciales reales).
+    -->
     <db:config name="Database_Config" doc:name="Base MySQL de entrenamiento">
         <db:my-sql-connection host="${secure::db.host}"
                               port="${secure::db.port}"
@@ -41,12 +87,37 @@
                               database="${secure::db.database}"/>
     </db:config>
 
-    <!-- APIkit lee el RAML y enruta GET /customers hacia el flow generado por convención. -->
+    <!--
+        APIkit Router config.
+
+        El RAML es la fuente de verdad del contrato HTTP: APIkit genera los
+        flows por convención (`get:\customers:SPS_Customers_API_Config`) y
+        valida method, content-type y schemas antes de invocar la lógica.
+        `outboundHeadersMapName` y `httpStatusVarName` son variables estándar
+        que el error-handler usa para devolver respuestas consistentes.
+    -->
     <apikit:config name="SPS_Customers_API_Config"
                    api="api/sps-customers-api.raml"
                    outboundHeadersMapName="outboundHeaders"
                    httpStatusVarName="httpStatus"/>
 
-    <!-- Se activa realmente cuando api.id contiene el API Instance ID de API Manager. -->
+    <!--
+        API Autodiscovery.
+
+        Enlaza esta app desplegada con una API Instance en API Manager. El
+        runtime, al arrancar, presenta `apiId` a la plataforma; si la
+        instancia existe y la app tiene credenciales válidas, las políticas
+        configuradas (rate limiting, Client-ID Enforcement, etc.) se descargan
+        e inyectan como interceptors antes del flow referenciado.
+
+        Notas de diseño:
+        - `apiId` se externaliza a `dev.yaml` (`api.id`) para que el mismo JAR
+          pueda subir a cualquier ambiente cambiando sólo properties.
+        - Se referencia con `secure::` porque está dentro del archivo cargado
+          por `secure-properties:config`; el prefijo no implica cifrado, sólo
+          indica el namespace donde el módulo expuso la propiedad.
+        - Si se necesita correr en local sin Mule Gateway, basta comentar este
+          elemento; los demás flows funcionan sin él.
+    -->
     <api-gateway:autodiscovery apiId="${secure::api.id}" flowRef="sps-customers-main"/>
 </mule>

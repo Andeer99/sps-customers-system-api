@@ -1,4 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+    implementation.xml
+    ============================================================================
+    Contiene la lógica de negocio del API: el flow principal expuesto por HTTP
+    y el flow generado por convención de APIkit para `GET /customers`. Los
+    elementos reutilizables (HTTP listener config, DB config, APIkit config,
+    Autodiscovery) viven en `global.xml`.
+-->
 <mule xmlns="http://www.mulesoft.org/schema/mule/core"
       xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit"
       xmlns:db="http://www.mulesoft.org/schema/mule/db"
@@ -13,7 +21,25 @@
         http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
         http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
 
-    <!-- Punto de entrada HTTP. APIkit decide el recurso concreto a partir del RAML. -->
+    <!--
+        Flow principal: punto de entrada HTTP.
+
+        El path `/api/v1/sps/*` actúa como prefijo común; APIkit Router se
+        encarga de matchear el resto del path contra los recursos del RAML
+        (en este momento solo `/customers`). Mantener el wildcard permite
+        agregar nuevos endpoints sin tocar el listener.
+
+        - El bloque `<http:response>` y `<http:error-response>` consumen las
+          variables `httpStatus` y `outboundHeaders` que tanto APIkit como el
+          error-handler poblan. Los `default` evitan que respuestas exitosas
+          o errores intermedios fallen por la ausencia de la variable.
+
+        - Este flow es también el `flowRef` apuntado por la Autodiscovery en
+          global.xml: cuando Mule Gateway aplica políticas (Client-ID,
+          rate-limit, etc.) las inyecta como interceptors justo antes del
+          listener, garantizando que ninguna petición llegue a la lógica de
+          negocio sin pasar por las políticas configuradas en API Manager.
+    -->
     <flow name="sps-customers-main">
         <http:listener config-ref="HTTP_Listener_config" path="/api/v1/sps/*" doc:name="GET /api/v1/sps/*">
             <http:response statusCode="#[vars.httpStatus default 200]">
@@ -25,7 +51,23 @@
             </http:error-response>
         </http:listener>
         <apikit:router config-ref="SPS_Customers_API_Config" doc:name="Enrutador APIkit"/>
-        <!-- Errores normalizados para que todos los consumidores reciban el mismo contrato JSON. -->
+
+        <!--
+            Error handler unificado.
+
+            APIkit emite tipos de error específicos (`APIKIT:BAD_REQUEST`,
+            `APIKIT:NOT_FOUND`, `APIKIT:METHOD_NOT_ALLOWED`) cuando el request
+            no calza con el contrato del RAML. Aquí se traducen a respuestas
+            JSON con la misma estructura (`error`, `code`, `timestamp`,
+            `correlationId`) para que cualquier consumidor pueda parsear los
+            errores con un único schema y trazarlos con el `correlationId`
+            inyectado por el runtime.
+
+            `on-error-propagate type="ANY"` actúa como red de seguridad para
+            cualquier excepción no prevista (caída de DB, error en DataWeave,
+            etc.). Se conserva `logException="true"` solo en este caso para
+            no esconder fallas reales detrás del JSON normalizado.
+        -->
         <error-handler>
             <on-error-propagate type="APIKIT:BAD_REQUEST" logException="false">
                 <set-variable variableName="httpStatus" value="400"/>
@@ -94,7 +136,30 @@ output application/json
         </error-handler>
     </flow>
 
-    <!-- Implementa GET /customers: consulta MySQL y entrega solo los campos públicos del cliente. -->
+    <!--
+        Flow generado por APIkit para `GET /customers`.
+
+        El nombre `get:\customers:SPS_Customers_API_Config` es convención de
+        APIkit: `<método>:\<recurso>:<configName>`. No se renombra porque el
+        router lo busca exactamente así para enrutar el request.
+
+        Lógica:
+        1. Logger inicial con `correlationId` para poder correlacionar este
+           punto con la respuesta final desde Anypoint Monitoring o los logs
+           de CloudHub.
+        2. `db:select` ejecuta la consulta indicada por el dominio: la query
+           viene en CDATA para soportar punto y coma final y caracteres
+           especiales sin escaping.
+        3. DataWeave proyecta solo los campos públicos del cliente. La
+           respuesta cruda del JDBC incluye columnas con mayúsculas o
+           minúsculas inconsistentes según driver y configuración; el
+           encadenamiento `default` cubre las tres variantes más comunes
+           (PascalCase, camelCase, UPPER_CASE) y devuelve `null` si ninguna
+           aparece, para que el consumidor reciba siempre el mismo schema.
+        4. Logger final reporta el tamaño de la respuesta. Ayuda a diferenciar
+           rápido en logs si una consulta vacía es porque la DB no devolvió
+           filas o porque DataWeave perdió campos en la transformación.
+    -->
     <flow name="get:\customers:SPS_Customers_API_Config">
         <logger level="INFO"
                 doc:name="Inicio de consulta de clientes"
@@ -102,7 +167,6 @@ output application/json
         <db:select config-ref="Database_Config" doc:name="Seleccionar clientes">
             <db:sql><![CDATA[SELECT * FROM customers;]]></db:sql>
         </db:select>
-        <!-- El mapper tolera diferentes variantes de casing devueltas por el driver JDBC. -->
         <ee:transform doc:name="Mapear respuesta de clientes">
             <ee:message>
                 <ee:set-payload><![CDATA[%dw 2.0

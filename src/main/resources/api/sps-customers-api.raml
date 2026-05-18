@@ -1,11 +1,29 @@
 #%RAML 1.0
+# ============================================================================
+# Contrato público del API de Clientes SPS.
+#
+# Este archivo es la fuente de verdad consumida por:
+#   - APIkit en runtime, que genera los flows por convención y valida cada
+#     request contra los tipos y respuestas declarados aquí.
+#   - Anypoint Exchange, que lo expone como asset reutilizable y produce la
+#     documentación navegable junto con los ejemplos de `examples/`.
+#   - API Manager, que lo usa al crear instancias administradas para conocer
+#     qué recursos y métodos podrá proteger con políticas.
+# ============================================================================
 title: API de Clientes SPS
 version: v1
+# baseUri local: declarado solo para "Try it" en Design Center. En CloudHub
+# el host real lo provee el listener HTTP, no este valor.
 baseUri: http://localhost:8081/api/v1/sps
 mediaType: application/json
 
-# Tipos públicos del contrato. Mantenerlos simples ayuda a que API Manager
-# y Postman muestren una respuesta fácil de validar durante el reto técnico.
+# ----------------------------------------------------------------------------
+# Tipos públicos del contrato.
+#
+# Se mantienen planos y opcionales (`required: false`) para tolerar registros
+# de la base con columnas faltantes sin romper la respuesta. `additionalProperties: false`
+# bloquea la propagación de columnas internas que el DataWeave no haya mapeado.
+# ----------------------------------------------------------------------------
 types:
   Customer:
     type: object
@@ -27,6 +45,11 @@ types:
         type: string
         required: false
         example: "Acme"
+
+  # Schema único para todos los errores que devuelve la API. Mantener un solo
+  # tipo permite que cualquier consumidor escriba un único parser de errores y
+  # reciba siempre las cuatro claves: error (mensaje legible), code (errorType
+  # de Mule), timestamp (UTC) y correlationId (para trazabilidad cruzada).
   ErrorResponse:
     type: object
     additionalProperties: false
@@ -44,6 +67,13 @@ types:
         type: string
         example: "2f8f3950-1438-11ef-91a9-acde48001122"
 
+# ----------------------------------------------------------------------------
+# Recurso `/customers`.
+#
+# Un único método GET por ahora. El ejemplo del response 200 se externaliza a
+# `examples/customers-response.json` para que el mismo payload se reutilice en
+# Exchange, Postman y pruebas locales sin duplicarlo en el RAML.
+# ----------------------------------------------------------------------------
 /customers:
   get:
     displayName: Consultar clientes

@@ -1,21 +1,37 @@
-# Propiedades para ejecución local.
-# El flow carga este archivo cuando mule.env=local.
+# =============================================================================
+# local.yaml — propiedades para ejecución local
+# =============================================================================
+# Se carga cuando el runtime arranca con `mule.env=local`. El módulo
+# Secure Properties descifra los valores marcados con `![...]` usando la llave
+# inyectada por `mule.key`; los valores sin ese formato quedan disponibles tal
+# cual, pero igual deben referenciarse con el prefijo `secure::` porque viven
+# dentro del archivo del secure-properties config.
+# =============================================================================
+
 http:
-  # 0.0.0.0 permite que el listener acepte llamadas desde localhost y herramientas como Postman.
+  # 0.0.0.0 permite conexiones desde cualquier interfaz local (incluido el
+  # localhost que usa Postman). El puerto 8081 coincide con el `baseUri` del
+  # RAML y no choca con servicios típicos de desarrollo (80, 443, 8080).
   host: "0.0.0.0"
   port: "8081"
 
 api:
-  # En local se usa 0 porque Autodiscovery solo se activa con el API Instance ID real.
+  # En local se usa 0 a propósito: cualquier valor diferente activaría el
+  # contacto con API Manager y la app no arrancaría si no tiene credenciales
+  # de plataforma. Con 0 (o con Autodiscovery comentado en global.xml) el
+  # endpoint sirve tráfico sin pasar por Mule Gateway.
   id: "0"
   name: "sps-customers-system-api"
   version: "v1"
 
 db:
-  # Base de entrenamiento indicada en el enunciado del reto.
+  # Base de entrenamiento pública de MuleSoft.
   host: "mudb.learn.mulesoft.com"
   port: "3306"
-  # Usuario y contraseña van cifrados; la llave se entrega por runtime con mule.key.
+  # Aunque la base sea de entrenamiento, las credenciales viajan cifradas para
+  # mantener la misma higiene que se aplicaría con un origen productivo.
+  # El descifrado lo hace secure-properties:config con la llave `mule.key`
+  # entregada como `-M-Dmule.key=...` al ejecutar Mule.
   user: "![3k6hxOMIlm0=]"
   password: "![3k6hxOMIlm0=]"
   database: "training"
