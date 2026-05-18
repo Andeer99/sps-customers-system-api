@@ -270,13 +270,14 @@ Cada paso del flujo está documentado con capturas reproducibles en `docs/screen
 
 | # | Capa | Captura |
 | --- | --- | --- |
+| 02 | CloudHub · Runtime Manager Running | [`02-cloudhub-runtime-running.png`](docs/screenshots/02-cloudhub-runtime-running.png) |
 | 03 | Exchange · RAML publicado | [`03-exchange-published.png`](docs/screenshots/03-exchange-published.png) |
 | 04 | CloudHub · endpoint público 200 | [`04-cloudhub-200-publico.png`](docs/screenshots/04-cloudhub-200-publico.png) |
 | 05 | Postman · CloudHub público 200 | [`05-postman-cloudhub-200-publico.png`](docs/screenshots/05-postman-cloudhub-200-publico.png) |
+| 07 | Postman · Client-ID Enforcement 401 | [`07-postman-cloudhub-401.png`](docs/screenshots/07-postman-cloudhub-401.png) |
+| 08 | Postman · Client-ID Enforcement 200 | [`08-postman-cloudhub-200-clientid.png`](docs/screenshots/08-postman-cloudhub-200-clientid.png) |
 
-> Capturas complementarias previstas en futuras iteraciones:
-> `02-cloudhub-runtime-running`, `06-api-manager-active`,
-> `07-postman-cloudhub-401`, `08-postman-cloudhub-200-clientid`.
+> Captura `06-api-manager-active` pendiente de incorporar al repositorio.
 
 ## Documentación Complementaria
 
