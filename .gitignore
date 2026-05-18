@@ -6,6 +6,8 @@ target/
 .factorypath
 .project
 .idea/
+.claude/
+bin/
 *.iml
 *.log
 
