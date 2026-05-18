@@ -4,13 +4,13 @@
 
 Este archivo deja contexto suficiente para continuar el trabajo aunque se pierda la ventana de conversación. Nace de la sesión `019e3830-1970-7bc1-9145-a4f719b83b85`, donde se planteó este repositorio como una System API de clientes para MuleSoft.
 
-## Objetivo del usuario
+## Objetivo
 
-Subir el repositorio a GitHub poco a poco, usando ramas `adoc/*`, documentando el código y actualizando el README como si el proyecto se hubiera construido por partes desde cero.
+Subir el repositorio a GitHub poco a poco, usando ramas simples, documentando el código y manteniendo un README orientado al proyecto. El README debe hablar del repositorio, arquitectura, ejecución y despliegue; la estrategia de ramas y continuidad se documenta aquí.
 
 ## Contexto fuente
 
-- Plan rápido confirmado por el usuario: `docs/plan-rapido-sps-customers-system-api.md`.
+- Plan rápido confirmado: `docs/plan-rapido-sps-customers-system-api.md`.
 - Enunciado PDF: `C:\Users\alexa\Downloads\Práctica - Mulesoft Trainee.pdf`.
 - Análisis HTML: `C:\Users\alexa\Downloads\mulesoft-trainee-analisis.html`.
 - Fecha límite indicada en el HTML: lunes 18 de mayo de 2026, 11:00am.
@@ -18,20 +18,20 @@ Subir el repositorio a GitHub poco a poco, usando ramas `adoc/*`, documentando e
 ## Estado actual
 
 - Workspace local: `C:\Users\alexa\OneDrive\Escritorio\sps-customers-system-api`
-- Rama local de avance: `adoc/documentacion-inicial`
+- Rama local de avance: `documentacion-inicial`
 - Estado Git inicial encontrado: repositorio sin commits en `master`.
 - Commit local inicial creado: `ff76115` (`chore: scaffold and document sps customers system api`).
 - Remoto GitHub: `https://github.com/Andeer99/sps-customers-system-api.git`.
-- Rama publicada: `origin/adoc/documentacion-inicial`.
-- PR sugerido: `https://github.com/Andeer99/sps-customers-system-api/pull/new/adoc/documentacion-inicial`.
+- Rama publicada objetivo: `origin/documentacion-inicial`.
+- PR sugerido: `https://github.com/Andeer99/sps-customers-system-api/pull/new/documentacion-inicial`.
 - GitHub CLI (`gh`) está instalado, pero no tiene sesión iniciada.
 - El conector GitHub detecta la cuenta `Andeer99`.
 - Archivo local de secretos: `LOCAL_SECRETS_DO_NOT_COMMIT.md`, ignorado por `.gitignore`.
 
 ## Qué se documentó en este corte
 
-- README reescrito como bitácora de construcción por etapas.
-- Estrategia de ramas `adoc/*` agregada al README.
+- README reescrito como documentación del proyecto, sin notas personales ni referencias a ramas.
+- Estrategia de ramas simples registrada en este handoff.
 - Plan rápido guardado en `docs/plan-rapido-sps-customers-system-api.md`.
 - Comentarios de intención agregados en:
   - `src/main/resources/api/sps-customers-api.raml`
@@ -65,12 +65,12 @@ Cliente/Postman
 
 ## Decisiones tomadas
 
-- Seguir el plan rápido del usuario como ruta principal.
+- Seguir el plan rápido como ruta principal.
 - Mantener separados `global.xml` e `implementation.xml`.
 - Usar Secure Properties con Blowfish/CBC porque las credenciales ya estaban cifradas así.
 - No subir la llave local de cifrado.
 - Dejar `api.id=0` en desarrollo hasta crear la instancia real en API Manager.
-- Documentar por etapas en README para que el historial de ramas tenga sentido.
+- Documentar por etapas en ramas y commits; mantener el README como documentación pública del proyecto.
 - Gestionar avance en README/HANDOFF/checklist local, sin Jira ni Confluence.
 
 ## Siguiente paso recomendado
@@ -78,26 +78,30 @@ Cliente/Postman
 1. Abrir PR del primer corte:
 
 ```text
-https://github.com/Andeer99/sps-customers-system-api/pull/new/adoc/documentacion-inicial
+https://github.com/Andeer99/sps-customers-system-api/pull/new/documentacion-inicial
 ```
 
-2. Crear la siguiente rama desde esta base:
+2. Mergear `documentacion-inicial` hacia `beta`.
+
+3. Crear la siguiente rama desde `beta`:
 
 ```powershell
-git switch -c adoc/contrato-raml
+git switch -c contrato-raml
 ```
 
-3. Validar y documentar el contrato RAML y ejemplos.
+4. Validar y documentar el contrato RAML y ejemplos.
 
 ## Ramas planeadas
 
-| Orden | Rama | Corte |
-| --- | --- | --- |
-| 1 | `adoc/documentacion-inicial` | README, comentarios y handoff. |
-| 2 | `adoc/contrato-raml` | RAML y ejemplos. |
-| 3 | `adoc/configuracion-global` | Secure Properties, listener, DB y Autodiscovery. |
-| 4 | `adoc/implementacion-clientes` | Flow, DataWeave, logs y errores. |
-| 5 | `adoc/cloudhub-api-manager` | CloudHub, API Manager, Postman y evidencias. |
+| Orden | Rama | Base | Destino |
+| --- | --- | --- | --- |
+| 1 | `documentacion-inicial` | `main` | `beta` |
+| 2 | `contrato-raml` | `beta` | `beta` |
+| 3 | `configuracion-global` | `beta` | `beta` |
+| 4 | `implementacion-clientes` | `beta` | `beta` |
+| 5 | `cloudhub-api-manager` | `beta` | `beta` |
+| 6 | `beta` | integración | `main` |
+| 7 | `main` | versión estable | entrega final |
 
 ## Comandos útiles en este entorno
 
@@ -130,4 +134,4 @@ Para operaciones que escriben en `.git` puede hacer falta aprobación/escalació
 GET http://localhost:8081/api/v1/sps/customers
 ```
 
-- Configurar remoto GitHub y hacer push de las ramas incrementales.
+- Mantener `beta` como rama de integración y mergear a `main` cuando la entrega esté validada.
