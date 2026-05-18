@@ -1,21 +1,41 @@
-# Propiedades para ambiente dev/CloudHub.
-# Se selecciona con mule.env=dev durante el despliegue.
+# =============================================================================
+# dev.yaml — propiedades para ambiente dev / CloudHub
+# =============================================================================
+# Se carga cuando el runtime arranca con `mule.env=dev`. Mantiene el mismo
+# shape que `local.yaml` para garantizar que el mismo XML funcione en ambos
+# ambientes sin cambios condicionales.
+#
+# Las propiedades de plataforma (`anypoint.platform.client_id` y
+# `anypoint.platform.client_secret`) NO viven aquí: se inyectan directamente
+# en Runtime Manager como propiedades protegidas, porque son específicas del
+# environment de Anypoint y rotan con independencia del código.
+# =============================================================================
+
 http:
-  # CloudHub inyecta el puerto real del worker, pero la práctica mantiene 8081 como valor base.
+  # 0.0.0.0 deja al worker de CloudHub aceptar tráfico desde el ingress; el
+  # puerto público real lo mapea CloudHub al 8081 interno declarado aquí.
   host: "0.0.0.0"
   port: "8081"
 
 api:
-  # Reemplazar por el API Instance ID generado en API Manager antes de activar Autodiscovery.
-  id: "0"
+  # API Instance ID emitido por API Manager al crear la instancia (Mule
+  # Gateway, sandbox). Lo consume `<api-gateway:autodiscovery>` en global.xml
+  # para enrolar la app desplegada y recibir las políticas configuradas
+  # (Client-ID Enforcement, rate limit, etc.). Es un valor estable por
+  # ambiente: cambiarlo requiere crear una nueva instancia en API Manager.
+  id: "20913965"
   name: "sps-customers-system-api"
   version: "v1"
 
 db:
-  # Mismo origen de datos que local para validar paridad entre ambientes.
+  # Mismo origen de datos que `local.yaml` para que la paridad entre ambientes
+  # se valide con consultas idénticas. En un caso real este host apuntaría a
+  # la base operacional del ambiente dev.
   host: "mudb.learn.mulesoft.com"
   port: "3306"
-  # Valores cifrados para no exponer credenciales en repositorio ni en revisiones técnicas.
+  # Mismas credenciales cifradas que en local. La llave (`mule.key`) se
+  # inyecta como propiedad protegida desde Runtime Manager para que no aparezca
+  # en el binario ni en el repositorio.
   user: "![3k6hxOMIlm0=]"
   password: "![3k6hxOMIlm0=]"
   database: "training"
