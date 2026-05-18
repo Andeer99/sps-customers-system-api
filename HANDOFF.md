@@ -6,7 +6,7 @@ Este archivo deja contexto suficiente para continuar el trabajo aunque se pierda
 
 ## Objetivo del usuario
 
-Subir el repositorio a GitHub poco a poco, usando ramas `codex/adoc-*`, documentando el código y actualizando el README como si el proyecto se hubiera construido por partes desde cero.
+Subir el repositorio a GitHub poco a poco, usando ramas `adoc/*`, documentando el código y actualizando el README como si el proyecto se hubiera construido por partes desde cero.
 
 ## Contexto fuente
 
@@ -18,12 +18,12 @@ Subir el repositorio a GitHub poco a poco, usando ramas `codex/adoc-*`, document
 ## Estado actual
 
 - Workspace local: `C:\Users\alexa\OneDrive\Escritorio\sps-customers-system-api`
-- Rama local de avance: `codex/adoc-documentacion-inicial`
+- Rama local de avance: `adoc/documentacion-inicial`
 - Estado Git inicial encontrado: repositorio sin commits en `master`.
 - Commit local inicial creado: `ff76115` (`chore: scaffold and document sps customers system api`).
 - Remoto GitHub: `https://github.com/Andeer99/sps-customers-system-api.git`.
-- Rama publicada: `origin/codex/adoc-documentacion-inicial`.
-- PR sugerido: `https://github.com/Andeer99/sps-customers-system-api/pull/new/codex/adoc-documentacion-inicial`.
+- Rama publicada: `origin/adoc/documentacion-inicial`.
+- PR sugerido: `https://github.com/Andeer99/sps-customers-system-api/pull/new/adoc/documentacion-inicial`.
 - GitHub CLI (`gh`) está instalado, pero no tiene sesión iniciada.
 - El conector GitHub detecta la cuenta `Andeer99`.
 - Archivo local de secretos: `LOCAL_SECRETS_DO_NOT_COMMIT.md`, ignorado por `.gitignore`.
@@ -31,7 +31,7 @@ Subir el repositorio a GitHub poco a poco, usando ramas `codex/adoc-*`, document
 ## Qué se documentó en este corte
 
 - README reescrito como bitácora de construcción por etapas.
-- Estrategia de ramas `codex/adoc-*` agregada al README.
+- Estrategia de ramas `adoc/*` agregada al README.
 - Plan rápido guardado en `docs/plan-rapido-sps-customers-system-api.md`.
 - Comentarios de intención agregados en:
   - `src/main/resources/api/sps-customers-api.raml`
@@ -78,13 +78,13 @@ Cliente/Postman
 1. Abrir PR del primer corte:
 
 ```text
-https://github.com/Andeer99/sps-customers-system-api/pull/new/codex/adoc-documentacion-inicial
+https://github.com/Andeer99/sps-customers-system-api/pull/new/adoc/documentacion-inicial
 ```
 
 2. Crear la siguiente rama desde esta base:
 
 ```powershell
-git switch -c codex/adoc-contrato-raml
+git switch -c adoc/contrato-raml
 ```
 
 3. Validar y documentar el contrato RAML y ejemplos.
@@ -93,11 +93,11 @@ git switch -c codex/adoc-contrato-raml
 
 | Orden | Rama | Corte |
 | --- | --- | --- |
-| 1 | `codex/adoc-documentacion-inicial` | README, comentarios y handoff. |
-| 2 | `codex/adoc-contrato-raml` | RAML y ejemplos. |
-| 3 | `codex/adoc-configuracion-global` | Secure Properties, listener, DB y Autodiscovery. |
-| 4 | `codex/adoc-implementacion-clientes` | Flow, DataWeave, logs y errores. |
-| 5 | `codex/adoc-cloudhub-api-manager` | CloudHub, API Manager, Postman y evidencias. |
+| 1 | `adoc/documentacion-inicial` | README, comentarios y handoff. |
+| 2 | `adoc/contrato-raml` | RAML y ejemplos. |
+| 3 | `adoc/configuracion-global` | Secure Properties, listener, DB y Autodiscovery. |
+| 4 | `adoc/implementacion-clientes` | Flow, DataWeave, logs y errores. |
+| 5 | `adoc/cloudhub-api-manager` | CloudHub, API Manager, Postman y evidencias. |
 
 ## Comandos útiles en este entorno
 

@@ -10,16 +10,16 @@ La aplicación está organizada como un proyecto Maven de Mule 4.9 / Java 17. Pu
 
 ## Estado del repositorio
 
-- Rama de trabajo actual: `codex/adoc-documentacion-inicial`.
+- Rama de trabajo actual: `adoc/documentacion-inicial`.
 - Remoto GitHub configurado: `https://github.com/Andeer99/sps-customers-system-api.git`.
-- Rama publicada: `origin/codex/adoc-documentacion-inicial`.
-- Estrategia de entrega: subir avances pequeños por ramas `codex/adoc-*`, dejando README y `HANDOFF.md` actualizados en cada corte.
+- Rama publicada: `origin/adoc/documentacion-inicial`.
+- Estrategia de entrega: subir avances pequeños por ramas `adoc/*`, dejando README y `HANDOFF.md` actualizados en cada corte.
 - Archivo de continuidad: `HANDOFF.md`.
 - Plan de trabajo base: `docs/plan-rapido-sps-customers-system-api.md`.
 
 Pull request sugerido para revisar este primer corte:
 
-https://github.com/Andeer99/sps-customers-system-api/pull/new/codex/adoc-documentacion-inicial
+https://github.com/Andeer99/sps-customers-system-api/pull/new/adoc/documentacion-inicial
 
 ## Qué incluye
 
@@ -105,11 +105,11 @@ Propuesta de ramas pequeñas para subir el repo poco a poco:
 
 | Orden | Rama | Objetivo |
 | --- | --- | --- |
-| 1 | `codex/adoc-documentacion-inicial` | README, comentarios de intención y `HANDOFF.md`. |
-| 2 | `codex/adoc-contrato-raml` | Ajustes o validación fina del contrato RAML y ejemplos. |
-| 3 | `codex/adoc-configuracion-global` | Revisión de properties, Secure Properties y Autodiscovery. |
-| 4 | `codex/adoc-implementacion-clientes` | Endurecer flow, DataWeave, logs y manejo de errores. |
-| 5 | `codex/adoc-cloudhub-api-manager` | Checklist final de despliegue, Postman y evidencias. |
+| 1 | `adoc/documentacion-inicial` | README, comentarios de intención y `HANDOFF.md`. |
+| 2 | `adoc/contrato-raml` | Ajustes o validación fina del contrato RAML y ejemplos. |
+| 3 | `adoc/configuracion-global` | Revisión de properties, Secure Properties y Autodiscovery. |
+| 4 | `adoc/implementacion-clientes` | Endurecer flow, DataWeave, logs y manejo de errores. |
+| 5 | `adoc/cloudhub-api-manager` | Checklist final de despliegue, Postman y evidencias. |
 
 ## Fuentes del alcance
 
