@@ -1,0 +1,60 @@
+#%RAML 1.0
+title: API de Clientes SPS
+version: v1
+baseUri: http://localhost:8081/api/v1/sps
+mediaType: application/json
+
+# Tipos públicos del contrato. Mantenerlos simples ayuda a que API Manager
+# y Postman muestren una respuesta fácil de validar durante el reto técnico.
+types:
+  Customer:
+    type: object
+    additionalProperties: false
+    properties:
+      firstName:
+        type: string
+        required: false
+        example: "John"
+      lastName:
+        type: string
+        required: false
+        example: "Doe"
+      email:
+        type: string
+        required: false
+        example: "john.doe@example.com"
+      company:
+        type: string
+        required: false
+        example: "Acme"
+  ErrorResponse:
+    type: object
+    additionalProperties: false
+    properties:
+      error:
+        type: string
+        example: "Error inesperado"
+      code:
+        type: string
+        example: "DB:CONNECTIVITY"
+      timestamp:
+        type: string
+        example: "2026-05-17T18:30:00Z"
+      correlationId:
+        type: string
+        example: "2f8f3950-1438-11ef-91a9-acde48001122"
+
+/customers:
+  get:
+    displayName: Consultar clientes
+    description: Devuelve los clientes de SPS desde la base de datos de entrenamiento de MuleSoft.
+    responses:
+      200:
+        body:
+          application/json:
+            type: Customer[]
+            example: !include examples/customers-response.json
+      500:
+        body:
+          application/json:
+            type: ErrorResponse
