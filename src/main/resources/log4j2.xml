@@ -1,16 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+    log4j2.xml
+    ============================================================================
+    Configuración de logging del runtime Mule. CloudHub captura la salida de
+    Console automáticamente y la expone en Runtime Manager → Logs. En local
+    los mismos logs salen por la consola de Studio.
+
+    El status del propio Log4j queda en WARN para evitar ruido de
+    inicialización (mensajes sobre carga de plugins, lookups, etc.) que no
+    aportan información de negocio.
+-->
 <Configuration status="WARN" name="sps-customers-system-api">
     <Appenders>
-        <!-- Salida estándar para que los logs sean visibles en Studio y en CloudHub. -->
+        <!--
+            Appender único de consola.
+
+            CloudHub no monta sistemas de archivos persistentes para las apps;
+            cualquier `FileAppender` se perdería al reciclar el worker. Por
+            eso toda la traza va a SYSTEM_OUT, donde el agente de CloudHub la
+            recoge y la envía a Anypoint Monitoring.
+
+            El pattern incluye `%X{correlationId}`: Mule lo agrega al MDC en
+            cada request, así que cualquier log emitido dentro del flujo de
+            una petición queda correlacionado con esa traza específica.
+        -->
         <Console name="Console" target="SYSTEM_OUT">
-            <!-- Incluye correlationId para rastrear una solicitud de punta a punta. -->
             <PatternLayout pattern="%-5p %d [%t] [%X{correlationId}] %c: %m%n"/>
         </Console>
     </Appenders>
+
     <Loggers>
-        <!-- Mantiene visibles los logger processors definidos en los flows Mule. -->
+        <!--
+            Asegura que los `<logger level="INFO" message="..."/>` definidos
+            en implementation.xml siempre se propaguen. Si un nivel por defecto
+            más estricto silenciara este logger, perderíamos la traza de
+            entrada/salida del flow de clientes.
+        -->
         <AsyncLogger name="org.mule.runtime.core.internal.processor.LoggerMessageProcessor" level="INFO"/>
-        <!-- INFO es suficiente para entrevista/demo: muestra trazabilidad sin saturar con DEBUG. -->
+
+        <!--
+            Root async en INFO: balance entre visibilidad (se ve el inicio y
+            fin de cada request, queries SQL parametrizadas, errores con
+            stacktrace) y costo (DEBUG generaría mucha basura del runtime que
+            satura la cuota de logs de CloudHub sandbox).
+
+            AsyncRoot evita que los I/O del logger bloqueen los threads que
+            procesan requests; el runtime de Mule recomienda este modo para
+            cargas con tráfico real.
+        -->
         <AsyncRoot level="INFO">
             <AppenderRef ref="Console"/>
         </AsyncRoot>

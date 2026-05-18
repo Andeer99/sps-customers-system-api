@@ -1,15 +1,14 @@
 [
   {
-    "firstName": "John",
-    "lastName": "Doe",
-    "email": "john.doe@example.com",
-    "company": "Acme"
+    "firstName": "Maura",
+    "lastName": "Wagstaffe",
+    "email": "mwagstaffe@npr.org",
+    "company": "Kazu"
   },
   {
-    "firstName": "Jane",
-    "lastName": "Doe",
-    "email": "jane.doe@example.com",
-    "company": "SPS"
+    "firstName": "Myrwyn",
+    "lastName": "Eliet",
+    "email": "meliet1@buzzfeed.com",
+    "company": "Skibox"
   }
 ]
-
