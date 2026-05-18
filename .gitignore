@@ -1,0 +1,15 @@
+target/
+.m2/
+.mule/
+.settings/
+.classpath
+.factorypath
+.project
+.idea/
+*.iml
+*.log
+
+# Local-only secrets and tools
+LOCAL_SECRETS_DO_NOT_COMMIT.md
+secure-properties-tool*.jar
+*.secure.local.yaml
