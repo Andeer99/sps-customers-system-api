@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN" name="sps-customers-system-api">
+    <Appenders>
+        <!-- Salida estándar para que los logs sean visibles en Studio y en CloudHub. -->
+        <Console name="Console" target="SYSTEM_OUT">
+            <!-- Incluye correlationId para rastrear una solicitud de punta a punta. -->
+            <PatternLayout pattern="%-5p %d [%t] [%X{correlationId}] %c: %m%n"/>
+        </Console>
+    </Appenders>
+    <Loggers>
+        <!-- Mantiene visibles los logger processors definidos en los flows Mule. -->
+        <AsyncLogger name="org.mule.runtime.core.internal.processor.LoggerMessageProcessor" level="INFO"/>
+        <!-- INFO es suficiente para entrevista/demo: muestra trazabilidad sin saturar con DEBUG. -->
+        <AsyncRoot level="INFO">
+            <AppenderRef ref="Console"/>
+        </AsyncRoot>
+    </Loggers>
+</Configuration>
