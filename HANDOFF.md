@@ -20,7 +20,10 @@ Subir el repositorio a GitHub poco a poco, usando ramas `codex/adoc-*`, document
 - Workspace local: `C:\Users\alexa\OneDrive\Escritorio\sps-customers-system-api`
 - Rama local de avance: `codex/adoc-documentacion-inicial`
 - Estado Git inicial encontrado: repositorio sin commits en `master`.
+- Commit local inicial creado: `ff76115` (`chore: scaffold and document sps customers system api`).
 - Remoto GitHub: no configurado al momento de crear este handoff.
+- GitHub CLI (`gh`) está instalado, pero no tiene sesión iniciada.
+- El conector GitHub detecta la cuenta `Andeer99`; falta confirmar/crear el repositorio destino.
 - Archivo local de secretos: `LOCAL_SECRETS_DO_NOT_COMMIT.md`, ignorado por `.gitignore`.
 
 ## Qué se documentó en este corte
