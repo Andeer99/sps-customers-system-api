@@ -11,17 +11,15 @@ La aplicación está organizada como un proyecto Maven de Mule 4.9 / Java 17. Pu
 ## Estado del repositorio
 
 - Rama de trabajo actual: `codex/adoc-documentacion-inicial`.
-- Repositorio local inicializado, todavía sin remoto GitHub configurado.
+- Remoto GitHub configurado: `https://github.com/Andeer99/sps-customers-system-api.git`.
+- Rama publicada: `origin/codex/adoc-documentacion-inicial`.
 - Estrategia de entrega: subir avances pequeños por ramas `codex/adoc-*`, dejando README y `HANDOFF.md` actualizados en cada corte.
 - Archivo de continuidad: `HANDOFF.md`.
 - Plan de trabajo base: `docs/plan-rapido-sps-customers-system-api.md`.
 
-Cuando exista el repositorio remoto, el primer push recomendado será:
+Pull request sugerido para revisar este primer corte:
 
-```powershell
-git remote add origin <url-del-repo-github>
-git push -u origin codex/adoc-documentacion-inicial
-```
+https://github.com/Andeer99/sps-customers-system-api/pull/new/codex/adoc-documentacion-inicial
 
 ## Qué incluye
 

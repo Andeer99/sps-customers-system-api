@@ -21,9 +21,11 @@ Subir el repositorio a GitHub poco a poco, usando ramas `codex/adoc-*`, document
 - Rama local de avance: `codex/adoc-documentacion-inicial`
 - Estado Git inicial encontrado: repositorio sin commits en `master`.
 - Commit local inicial creado: `ff76115` (`chore: scaffold and document sps customers system api`).
-- Remoto GitHub: no configurado al momento de crear este handoff.
+- Remoto GitHub: `https://github.com/Andeer99/sps-customers-system-api.git`.
+- Rama publicada: `origin/codex/adoc-documentacion-inicial`.
+- PR sugerido: `https://github.com/Andeer99/sps-customers-system-api/pull/new/codex/adoc-documentacion-inicial`.
 - GitHub CLI (`gh`) está instalado, pero no tiene sesión iniciada.
-- El conector GitHub detecta la cuenta `Andeer99`; falta confirmar/crear el repositorio destino.
+- El conector GitHub detecta la cuenta `Andeer99`.
 - Archivo local de secretos: `LOCAL_SECRETS_DO_NOT_COMMIT.md`, ignorado por `.gitignore`.
 
 ## Qué se documentó en este corte
@@ -73,26 +75,19 @@ Cliente/Postman
 
 ## Siguiente paso recomendado
 
-1. Crear o confirmar el repositorio en GitHub.
-2. Agregar remoto:
+1. Abrir PR del primer corte:
 
-```powershell
-git remote add origin <url-del-repo-github>
+```text
+https://github.com/Andeer99/sps-customers-system-api/pull/new/codex/adoc-documentacion-inicial
 ```
 
-3. Empujar la rama actual:
-
-```powershell
-git push -u origin codex/adoc-documentacion-inicial
-```
-
-4. Crear la siguiente rama desde esta base:
+2. Crear la siguiente rama desde esta base:
 
 ```powershell
 git switch -c codex/adoc-contrato-raml
 ```
 
-5. Validar y documentar el contrato RAML y ejemplos.
+3. Validar y documentar el contrato RAML y ejemplos.
 
 ## Ramas planeadas
 
